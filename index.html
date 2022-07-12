@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://cdn.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js" integrity="sha256-oZEaXgWqxLmr12VzCK9eGOuHIi3XPZ/KsJXXFjtyvZA=" crossorigin="anonymous"></script>
+        <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+        </script>
+    </head>
+    <body scroll="no">
+        <div id="charts" style="width: 60vw; height: 60vh;position:absolute;left:0;top:5vw;"></div>
+		<div style="width:100vw;height:102vh">
+			<iframe style="margin-left:-1%;border:0vw;margin-top:-1%" width="101%" height="100%" src="https://charts.thingjs.com/kunpeng/preview/publish/FRzAJr"></iframe>
+		</div>
+        <script>
+            $.get("https://geo.datav.aliyun.com/areas_v3/bound/330000_full.json",function(data,status){
+                console.log(data)
+                const charts = echarts.init(document.getElementById("charts"));
+                const option = {
+                    // 背景颜色
+                    //backgroundColor: "#404a59",
+                    // 提示浮窗样式
+                    tooltip: {
+                        show: true,
+                        trigger: "item",
+                        alwaysShowContent: false,
+                        backgroundColor: "#0C121C",
+                        borderColor: "rgba(0, 0, 0, 0.16);",
+                        hideDelay: 100,
+                        triggerOn: "mousemove",
+                        enterable: true,
+                        textStyle: {
+                            color: "#DADADA",
+                            fontSize: "12",
+                            width: 20,
+                            height: 30,
+                            overflow: "break",
+                        },
+                        showDelay: 100
+                    },
+                    visualMap: {
+                        // 是否展示左下角，即是是false，也仅是不显示，不影响数据的映射
+                        show: true,
+                        // 上下端文字
+                        text: ["高", "低"],
+                        // 最小值和最大值，必须指定
+                        min: 0,
+                        max: 6000,
+                        // 位置
+                        left: "10%",
+                        bottom: "10%",
+                        // 是否展示滑块
+                        calculable: true,
+                        // 指定映射的数据，对应的是option.series，这里根据自己的实际需要进行配置
+                        seriesIndex: [0],
+                        // 从下到上的颜色
+                        inRange: {
+                            color: ['#00467F', '#A5CC82'],
+                        },
+                        //字体颜色
+                        textStyle: {
+                            color: "#fff",
+                            map: "china",
+                        },
+                    },
+                    series: [
+                        {
+                            type: "scatter",
+                            coordinateSystem: "geo",
+                            symbol: "pin",
+                            legendHoverLink: true,
+                            symbolSize: [60, 60],
+                            // 这里渲染标志里的内容以及样式
+                            label: {
+                                show: true,
+                                formatter(value) {
+                                    return value.data.value[2];
+                                },
+                                color: "#fff",
+                            },
+                            // 标志的样式
+                            itemStyle: {
+                                normal: {
+                                    color: "rgba(255,0,0,.7)",
+                                    shadowBlur: 2,
+                                    shadowColor: "D8BC37",
+                                },
+                            },
+                            // 数据格式，其中name,value是必要的，value的前两个值是数据点的经纬度，其他的数据格式可以自定义
+                            // 至于如何展示，完全是靠上面的formatter来自己定义的
+                            data: [
+                                { name: "西藏", value: [120.153576, 30.287459, 2333] },
+                                { name: "黑龙江", value: [121.549792, 29.868388, 1007] },
+                            ],
+                            showEffectOn: "render",
+                            rippleEffect: {
+                                brushType: "stroke",
+                            },
+                            hoverAnimation: true,
+                            zlevel: 1,
+                        },
+                        // {
+                        //   type: "effectScatter",
+                        //   coordinateSystem: "geo",
+                        //   effectType: "ripple",
+                        //   showEffectOn: "render",
+                        //   rippleEffect: {
+                        //     period: 10,
+                        //     scale: 10,
+                        //     brushType: "fill",
+                        //   },
+
+                        //   hoverAnimation: true,
+                        //   itemStyle: {
+                        //     normal: {
+                        //       color: "rgba(255, 235, 59, .7)",
+                        //       shadowBlur: 10,
+                        //       shadowColor: "#333",
+                        //     },
+                        //   },
+                        //   zlevel: 1,
+                        //   data: [
+                        //     { name: "西藏", value: [91.23, 29.5, 2333] },
+                        //     { name: "黑龙江", value: [128.03, 47.01, 1007] },
+                        //   ],
+                        // },
+                    ],
+                    // 地图配置
+                    geo: {
+                        map: "zhejian",
+                        label: {
+                            // 通常状态下的样式
+                            normal: {
+                                show: true,
+                                textStyle: {
+                                    color: "#fff",
+                                },
+                            },
+                            // 鼠标放上去的样式
+                            emphasis: {
+                                textStyle: {
+                                    color: "#fff",
+                                },
+                            },
+                        },
+                        // 地图区域的样式设置
+                        itemStyle: {
+                            normal: {
+                                borderColor: "rgba(147, 235, 248, 1)",
+                                borderWidth: 1,
+                                areaColor: {
+                                    type: "radial",
+                                    x: 0.5,
+                                    y: 0.5,
+                                    r: 0.8,
+                                    colorStops: [
+                                        {
+                                            offset: 0,
+                                            color: "rgba(147, 235, 248, 0)", // 0% 处的颜色
+                                        },
+                                        {
+                                            offset: 1,
+                                            color: "rgba(147, 235, 248, .2)", // 100% 处的颜色
+                                        },
+                                    ],
+                                    globalCoord: false, // 缺省为 false
+                                },
+                                shadowColor: "rgba(128, 217, 248, 1)",
+                                shadowOffsetX: -2,
+                                shadowOffsetY: 2,
+                                shadowBlur: 10,
+                            },
+                            // 鼠标放上去高亮的样式
+                            emphasis: {
+                                areaColor: "#389BB7",
+                                borderWidth: 0,
+                            },
+                        },
+                    },
+                };
+                // 地图注册，第一个参数的名字必须和option.geo.map一致
+                echarts.registerMap("zhejian",data)
+
+                charts.setOption(option);
+				charts.on('click',function(args){
+					console.log(args);
+					if(args.name=='绍兴市'){
+						location.href = 'https://charts.thingjs.com/kunpeng/preview/publish/NzYraq';//测试效果
+					}
+				})
+            });
+
+        </script>
+    </body>
+	<style>
+		body {
+overflow-x:hidden;
+overflow-y:hidden;
+}
+	</style>
+</html>
